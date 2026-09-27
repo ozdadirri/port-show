@@ -7,7 +7,7 @@
 
 <h2 align="center">See every port on your Mac, and who owns it</h2>
 
-PortShow is a lightweight **macOS menu bar app** that lists every **listening port** on your Mac and the **app or service** behind it. From one popover you can [open it in your browser](#features), jump to the script that started it, or kill it. It runs in about **34 MB of memory** and installs from a **1 MB** disk image.
+PortShow is a lightweight **macOS menu bar app** that lists every **listening port** on your Mac and the **app or service** behind it. From one popover you can [open it in your browser](#features), jump to the script that started it, or kill it. It runs in about **34 MB of memory** and installs from a **600 KB** disk image.
 
 <p align="center">
   <img src="docs/screenshot.png" alt="PortShow popover" width="340">
@@ -41,8 +41,19 @@ PortShow is a lightweight **macOS menu bar app** that lists every **listening po
 
 ## Requirements
 
-- macOS 13 Ventura or later
-- Apple Silicon (the build currently targets `arm64` only)
+- Apple Silicon or Intel Mac. The app is a universal binary.
+- One of these macOS versions:
+
+  | macOS | Supported |
+  |---|---|
+  | macOS 26 Tahoe and later | ✅ |
+  | macOS 15 Sequoia | ✅ |
+  | macOS 14 Sonoma | ✅ |
+  | macOS 13 Ventura | ✅ |
+  | macOS 12 Monterey and earlier | ❌ |
+
+  macOS 13 Ventura runs on Intel Macs from 2017 onwards and on every Apple Silicon Mac.
+
 - Xcode Command Line Tools to build (`xcode-select --install`). Full Xcode isn't needed.
 
 ## Build
@@ -51,7 +62,7 @@ PortShow is a lightweight **macOS menu bar app** that lists every **listening po
 ./build.sh
 ```
 
-This compiles the sources with `swiftc`, assembles and ad-hoc signs `build/PortShow.app`, and packages `build/PortShow.dmg`.
+This compiles the sources with `swiftc` for both Apple Silicon and Intel, joins them into one universal binary, assembles and ad-hoc signs `build/PortShow.app`, and packages `build/PortShow.dmg`.
 
 ## Install
 
@@ -69,7 +80,7 @@ Measured over 60 seconds on an Apple Silicon Mac with about 25 ports open, at th
 | CPU, app | ~1.4% of one core on average |
 | CPU, port scan | ~0.05 s of CPU every 3 s for the two `lsof` calls, roughly another 1.7% |
 | Threads | 7 |
-| App size | 744 KB (`.app`), 988 KB (`.dmg`) |
+| App size | 772 KB (`.app`, universal), 604 KB (`.dmg`) |
 
 Most of the CPU goes to the port scan that runs every 3 seconds; choosing a longer interval under **Refresh Every** reduces it proportionally. Tools like `ps` report ~150 MB of memory, but that includes macOS system libraries shared with every other app.
 

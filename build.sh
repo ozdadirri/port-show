@@ -8,16 +8,25 @@ APP_DIR="$BUILD_DIR/$APP_NAME.app"
 CONTENTS="$APP_DIR/Contents"
 MACOS_DIR="$CONTENTS/MacOS"
 RESOURCES_DIR="$CONTENTS/Resources"
+# Keep in sync with LSMinimumSystemVersion in Resources/Info.plist.
+MIN_MACOS="13.0"
 
 echo "==> Cleaning build directory"
 rm -rf "$APP_DIR"
 mkdir -p "$MACOS_DIR" "$RESOURCES_DIR"
 
-echo "==> Compiling Swift sources"
-swiftc -O \
-  -target arm64-apple-macosx13.0 \
-  -o "$MACOS_DIR/$APP_NAME" \
-  "$ROOT"/Sources/*.swift
+echo "==> Compiling Swift sources (Apple Silicon + Intel)"
+ARCH_DIR="$BUILD_DIR/arch"
+rm -rf "$ARCH_DIR"
+mkdir -p "$ARCH_DIR"
+for ARCH in arm64 x86_64; do
+  swiftc -O \
+    -target "$ARCH-apple-macosx$MIN_MACOS" \
+    -o "$ARCH_DIR/$APP_NAME-$ARCH" \
+    "$ROOT"/Sources/*.swift
+done
+lipo -create -output "$MACOS_DIR/$APP_NAME" "$ARCH_DIR/$APP_NAME-arm64" "$ARCH_DIR/$APP_NAME-x86_64"
+rm -rf "$ARCH_DIR"
 
 echo "==> Copying Info.plist"
 cp "$ROOT/Resources/Info.plist" "$CONTENTS/Info.plist"
