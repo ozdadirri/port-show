@@ -13,7 +13,10 @@ A macOS menu bar app that shows every port in use on your Mac, which app or serv
   - **Services**: things you run yourself, such as dev servers, Homebrew databases and scripts.
   - **System**: macOS daemons and app-managed helpers (under `/System`, `/usr`, `~/Library`, …). Hidden unless **System ports** is ticked.
 - **Meaningful names** for scripts. A Python/Node/Java process is named after its project folder and what it runs, e.g. `audio-log (uvicorn)` instead of `Python`.
-- **Hover a row** for quick actions:
+- **Hover a row** for quick actions (left to right):
+
+  <img src="docs/hover-actions.png" alt="Hover actions on a row" width="340">
+
   - Open `http://host:port` in your browser
   - Copy the port, process and PID
   - Show the start script in Finder (e.g. `app/main.py` for `uvicorn app.main:app`, or the program itself for native binaries)
