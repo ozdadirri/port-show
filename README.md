@@ -1,4 +1,6 @@
-<img src="docs/icon.png" alt="PortShow icon" width="128" align="right">
+<p align="center">
+  <img src="docs/icon.png" alt="PortShow icon" width="256">
+</p>
 
 # PortShow
 
