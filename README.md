@@ -24,7 +24,11 @@ A macOS menu bar app that shows every port in use on your Mac, which app or serv
 - **Right-click a row** for the full menu: Open in Browser, Copy Port, Copy PID, Reveal in Finder, Pin/Unpin, Kill Process.
 - **Search** by port, name, PID, or address.
 - **Launch at Login** checkbox (installs a per-user LaunchAgent).
-- **Notifications** when a pinned port goes up or down. Toggle them with the gear icon.
+- **Settings menu** (gear icon, top right), all remembered between launches:
+  - **Refresh Every**: 2, 3 (default), 5, 10 or 30 seconds. Slower uses less CPU.
+  - **Show UDP Ports**: hide UDP to keep the list to servers you can connect to.
+  - **Notify When Pinned Ports Go Up/Down**: a macOS notification when a pinned port starts or stops.
+  - About PortShow, View on GitHub, Quit.
 
 ## Requirements
 
@@ -58,7 +62,7 @@ Measured over 60 seconds on an Apple Silicon Mac with about 25 ports open:
 | Threads | 7 |
 | App size | 744 KB (`.app`), 988 KB (`.dmg`) |
 
-Most of the CPU goes to the port scan that runs every 3 seconds. Tools like `ps` report ~150 MB of memory, but that includes macOS system libraries shared with every other app.
+Most of the CPU goes to the port scan that runs every 3 seconds; choosing a longer interval under **Refresh Every** reduces it proportionally. Tools like `ps` report ~150 MB of memory, but that includes macOS system libraries shared with every other app.
 
 ## Limitations
 

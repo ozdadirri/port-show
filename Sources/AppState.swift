@@ -6,7 +6,26 @@ final class AppState {
         didSet { onChange?() }
     }
     private(set) var launchAtLoginEnabled: Bool = LoginItemManager.isEnabled
-    private(set) var notificationsEnabled: Bool = false
+    private(set) var notificationsEnabled: Bool = UserDefaults.standard.bool(forKey: "com.portshow.notifications")
+
+    static let refreshIntervalOptions: [TimeInterval] = [2, 3, 5, 10, 30]
+
+    var refreshInterval: TimeInterval = {
+        let saved = UserDefaults.standard.double(forKey: "com.portshow.refreshInterval")
+        return saved > 0 ? saved : 3
+    }() {
+        didSet {
+            UserDefaults.standard.set(refreshInterval, forKey: "com.portshow.refreshInterval")
+            scheduleTimer()
+        }
+    }
+
+    var showUDPPorts: Bool = UserDefaults.standard.object(forKey: "com.portshow.showUDP") as? Bool ?? true {
+        didSet {
+            UserDefaults.standard.set(showUDPPorts, forKey: "com.portshow.showUDP")
+            onChange?()
+        }
+    }
 
     /// Called on the main thread whenever data the UI should reflect changes.
     var onChange: (() -> Void)?
@@ -19,9 +38,10 @@ final class AppState {
     private let scanQueue = DispatchQueue(label: "com.portshow.scan", qos: .utility)
 
     var filteredEntries: [PortEntry] {
-        guard !searchText.isEmpty else { return entries }
+        let visible = showUDPPorts ? entries : entries.filter { $0.proto != "UDP" }
+        guard !searchText.isEmpty else { return visible }
         let query = searchText.lowercased()
-        return entries.filter {
+        return visible.filter {
             String($0.port).contains(query)
                 || $0.processName.lowercased().contains(query)
                 || String($0.pid).contains(query)
@@ -45,8 +65,16 @@ final class AppState {
     }
 
     func start() {
+        if notificationsEnabled {
+            NotificationManager.shared.requestAuthorizationIfNeeded()
+        }
         refresh()
-        timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
+        scheduleTimer()
+    }
+
+    private func scheduleTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: true) { [weak self] _ in
             self?.refresh()
         }
     }
@@ -73,8 +101,11 @@ final class AppState {
 
     func toggleNotifications() {
         notificationsEnabled.toggle()
+        UserDefaults.standard.set(notificationsEnabled, forKey: "com.portshow.notifications")
         if notificationsEnabled {
             NotificationManager.shared.requestAuthorizationIfNeeded()
+            // Re-baseline so ports that changed while notifications were off don't fire.
+            hasScannedOnce = false
         }
         onChange?()
     }

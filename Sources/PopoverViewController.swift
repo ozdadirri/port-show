@@ -252,7 +252,66 @@ final class PopoverViewController: NSViewController, NSSearchFieldDelegate {
     }
 
     @objc private func handleRefresh() { state.refresh() }
-    @objc private func handleSettings() { state.toggleNotifications() }
+    @objc private func handleSettings(_ sender: NSButton) {
+        let menu = NSMenu()
+
+        let intervalItem = NSMenuItem(title: "Refresh Every", action: nil, keyEquivalent: "")
+        let intervalMenu = NSMenu()
+        for seconds in AppState.refreshIntervalOptions {
+            let item = NSMenuItem(title: "\(Int(seconds)) seconds", action: #selector(handleIntervalChoice(_:)), keyEquivalent: "")
+            item.target = self
+            item.representedObject = seconds
+            item.state = seconds == state.refreshInterval ? .on : .off
+            intervalMenu.addItem(item)
+        }
+        intervalItem.submenu = intervalMenu
+        menu.addItem(intervalItem)
+
+        let udpItem = NSMenuItem(title: "Show UDP Ports", action: #selector(handleUDPToggle), keyEquivalent: "")
+        udpItem.target = self
+        udpItem.state = state.showUDPPorts ? .on : .off
+        menu.addItem(udpItem)
+
+        let notifyItem = NSMenuItem(title: "Notify When Pinned Ports Go Up/Down", action: #selector(handleNotificationsToggle), keyEquivalent: "")
+        notifyItem.target = self
+        notifyItem.state = state.notificationsEnabled ? .on : .off
+        menu.addItem(notifyItem)
+
+        menu.addItem(.separator())
+
+        let aboutItem = NSMenuItem(title: "About PortShow", action: #selector(handleAbout), keyEquivalent: "")
+        aboutItem.target = self
+        menu.addItem(aboutItem)
+
+        let githubItem = NSMenuItem(title: "View on GitHub", action: #selector(handleOpenGitHub), keyEquivalent: "")
+        githubItem.target = self
+        menu.addItem(githubItem)
+
+        menu.addItem(.separator())
+
+        let quitItem = NSMenuItem(title: "Quit PortShow", action: #selector(handleQuit), keyEquivalent: "q")
+        quitItem.target = self
+        menu.addItem(quitItem)
+
+        menu.popUp(positioning: nil, at: NSPoint(x: 0, y: sender.bounds.height + 4), in: sender)
+    }
+
+    @objc private func handleIntervalChoice(_ sender: NSMenuItem) {
+        guard let seconds = sender.representedObject as? TimeInterval else { return }
+        state.refreshInterval = seconds
+    }
+
+    @objc private func handleUDPToggle() { state.showUDPPorts.toggle() }
+    @objc private func handleNotificationsToggle() { state.toggleNotifications() }
+
+    @objc private func handleAbout() {
+        NSApp.activate(ignoringOtherApps: true)
+        NSApp.orderFrontStandardAboutPanel(nil)
+    }
+
+    @objc private func handleOpenGitHub() {
+        NSWorkspace.shared.open(URL(string: "https://github.com/ozdadirri/port-show")!)
+    }
     @objc private func handleLaunchAtLoginToggle() { state.toggleLaunchAtLogin() }
     @objc private func handleShowSystemToggle() { state.showSystemPorts = showSystemCheckbox.state == .on }
     @objc private func handleQuit() { NSApplication.shared.terminate(nil) }
