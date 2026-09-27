@@ -1,3 +1,5 @@
+<img src="docs/icon.png" alt="PortShow icon" width="128" align="right">
+
 # PortShow
 
 A macOS menu bar app that shows every port in use on your Mac, which app or service owns it, and lets you open, reveal, or kill it in one click.
@@ -48,7 +50,7 @@ This compiles the sources with `swiftc`, assembles and ad-hoc signs `build/PortS
 
 1. Open `build/PortShow.dmg` and drag **PortShow** into **Applications**.
 2. The app isn't notarized, so the first time you open it, right-click it in Applications, choose **Open**, then confirm.
-3. Look for the network icon in the menu bar.
+3. Look for the `:_` icon in the menu bar.
 
 ## Resource usage
 
