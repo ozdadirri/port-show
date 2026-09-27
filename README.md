@@ -1,12 +1,19 @@
 <p align="center">
-  <img src="docs/icon.png" alt="PortShow icon" width="256">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/logo-dark.png">
+    <img src="docs/logo-light.png" alt="PortShow" width="375">
+  </picture>
 </p>
 
-# PortShow
+---
 
-A macOS menu bar app that shows every port in use on your Mac, which app or service owns it, and lets you open, reveal, or kill it in one click.
+<h2 align="center">See every port on your Mac, and who owns it</h2>
 
-<img src="docs/screenshot.png" alt="PortShow popover" width="340">
+PortShow is a lightweight **macOS menu bar app** that lists every **listening port** on your Mac and the **app or service** behind it. From one popover you can [open it in your browser](#features), jump to the script that started it, or kill it. It runs in about **34 MB of memory** and installs from a **1 MB** disk image.
+
+<p align="center">
+  <img src="docs/screenshot.png" alt="PortShow popover" width="340">
+</p>
 
 ## Features
 
