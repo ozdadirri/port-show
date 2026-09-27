@@ -6,7 +6,7 @@ A macOS menu bar app that shows every port in use on your Mac, which app or serv
 
 ## Features
 
-- **Menu bar popover** listing listening TCP ports and bound UDP ports, refreshed every 3 seconds by default (adjustable in Settings).
+- **Menu bar popover** listing listening TCP ports and bound UDP ports, refreshed every 3 seconds by default (adjustable in Settings). Outgoing connections (such as a browser's HTTP/3 traffic over UDP) are left out, since nothing is listening on them.
 - **Grouped automatically** by where the owning program lives:
   - **Pinned**: ports you've starred, always at the top.
   - **Apps**: ports opened by desktop apps (anything inside a `.app` bundle).

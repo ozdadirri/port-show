@@ -42,8 +42,10 @@ enum PortScanner {
             guard let pid = Int32(cols[1]) else { continue }
             let name = cols[8]
 
-            // strip "->remote" suffix from connected sockets, keep local side only
-            let localPart = name.split(separator: "-").first.map(String.init) ?? name
+            // "local->remote" is an outgoing connection (e.g. a browser's HTTP/3/QUIC
+            // traffic over UDP), not a port anything is listening on.
+            if name.contains("->") { continue }
+            let localPart = name
             guard let colonRange = localPart.range(of: ":", options: .backwards) else { continue }
             var address = String(localPart[localPart.startIndex..<colonRange.lowerBound])
             let portStr = String(localPart[colonRange.upperBound...])
