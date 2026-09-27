@@ -1,8 +1,6 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/logo-dark.png">
-    <img src="docs/logo-light.png" alt="PortShow" width="375">
-  </picture>
+  <img src="docs/logo-light.png#gh-light-mode-only" alt="PortShow" width="375">
+  <img src="docs/logo-dark.png#gh-dark-mode-only" alt="PortShow" width="375">
 </p>
 
 ---
