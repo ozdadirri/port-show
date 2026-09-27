@@ -46,6 +46,20 @@ This compiles the sources with `swiftc`, assembles and ad-hoc signs `build/PortS
 2. The app isn't notarized, so the first time you open it, right-click it in Applications, choose **Open**, then confirm.
 3. Look for the network icon in the menu bar.
 
+## Resource usage
+
+Measured over 60 seconds on an Apple Silicon Mac with about 25 ports open:
+
+| | |
+|---|---|
+| Memory | ~34 MB (the figure Activity Monitor shows; stays flat over time) |
+| CPU, app | ~1.4% of one core on average |
+| CPU, port scan | ~0.05 s of CPU every 3 s for the two `lsof` calls, roughly another 1.7% |
+| Threads | 7 |
+| App size | 744 KB (`.app`), 988 KB (`.dmg`) |
+
+Most of the CPU goes to the port scan that runs every 3 seconds. Tools like `ps` report ~150 MB of memory, but that includes macOS system libraries shared with every other app.
+
 ## Limitations
 
 - Ports are read with `lsof` as your user, so sockets owned by root-only daemons may not appear, and **Kill** can't stop processes owned by other users.
